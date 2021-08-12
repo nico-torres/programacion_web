@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>Proyecto Info</title>
+    </head>
+<body>
+    <p>¡Hola mundo!</p>
+    <p>¡Esta es mi página!</p>
+    <form action="" method="POST">
+    {% csrf_token %}
+        {% for item, value in preguntas.items %}
+            <p>{{ item }}:</p>
+            <select name="{{ forloop.counter }}">
+                <option value="">---------</option>
+                {% for opcion in value %}
+                <option value="{{ opcion.id }}">{{ opcion.opcion }}</option>
+                {% endfor %}
+            </select>
+        <br>
+    {% endfor %}
+    <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
