@@ -4,6 +4,9 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from .forms import PreguntaForm
 from datetime import datetime
+from .models import PostForm
+from django.shortcuts import redirect
+
 
 # Create your views here.
 @login_required(login_url='/login')
@@ -25,8 +28,8 @@ def listar_preguntas(request):
         return render(request, 'juego/listar_preguntas.html', {"preguntas":data})
 
 def crear_pregunta(request):
-    if request.method == "POST":
-        form = PreguntaForm(request.POST)
+    if request.method == "juego":
+        form = PreguntaForm(request.JUEGO)
         if form.is_valid():
             registro = form.save(commit=False)
             registro.fecha_creacion = datetime.now()
@@ -34,4 +37,39 @@ def crear_pregunta(request):
     form = PreguntaForm()
     return render(request, 'juego/crear_pregunta.html', {'form': form})
 
+def crear_post(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.autor = request.user
+            post.fecha_creacion = datetime.now()
+            post.save()
+            return redirect('juego:detalle_post', identificador=post.id) #nombre de la vista a la que queremos ir
+    else:
+        form = PostForm()
+    return render(request, 'crear_post.html', {'form': form})
 
+def detalle_post(request, identificador):
+    post = Post.objects.get(pk=identificador)
+    context = {"posts": post}
+    return render(request, 'detalle_post.html', context)
+
+def editar_post(request, identificador):
+    post = get_object_or_404(Post, pk=identificador)
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.autor = request.user
+            post.fecha_creacion = datetime.now()
+            post.save()
+            return redirect('juego:detalle_post', identificador=post.id)
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'editar_post.html', {'form': form})
+
+def eliminar_post(request, identificador):
+    post = Post.objects.get(pk=identificador)
+    context = {"posts": post}
+    return render(request, 'detalle_post.html', context)

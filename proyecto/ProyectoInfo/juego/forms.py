@@ -1,8 +1,9 @@
 from django import forms
-from .models import Pregunta
+from .models import Post
 
-class PreguntaForm(forms.ModelForm):
+class PostForm(forms.ModelForm):
 
     class Meta:
-        model = Pregunta
-        fields = ('autor', 'pregunta', 'fecha_creacion')
+        model = Post
+        fields = ('titulo', 'texto',)
+
