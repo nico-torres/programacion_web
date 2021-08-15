@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>Login</title>
+    </head>
+
+<body>
+        {% if form.errors %}
+        <p>Su nombre de usuario y contraseña no coinciden. Por favor revise los datos ingresados e intente nuevamente.</p>
+        {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div>
+          <td>{{ form.username.label_tag }}</td>
+          <td>{{ form.username }}</td>
+        </div>
+        <div>
+          <td>{{ form.password.label_tag }}</td>
+          <td>{{ form.password }}</td>
+        </div>
+        <div>
+          <input type="submit" value="login" />
+        </div>
+    </form>
+
+    <a href="/registro">Registrar usuario</a>
+</body>
+
+</html>
